@@ -1,5 +1,5 @@
 node {
-    stage('cleanup'){
+    stage('Cleanup'){
         cleanWs()
     }
     checkout scm
@@ -20,6 +20,11 @@ node {
             } catch(Exception e) {
                 echo 'Failed Linting ' + e.toString()
             }
-        } 
+        }
+        stage('Test') {
+            docker.image('buildkite/puppeteer:8.0.0').inside {
+                sh 'npm run test --cache="./npm"'
+            }
+        }
     }
 }
